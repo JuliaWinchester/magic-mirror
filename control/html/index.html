@@ -1,0 +1,29 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html ng-app="app" ng-controller="AppController">
+<head>
+	<meta charset="UTF-8">
+	<!-- Fonts and icons -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<!-- JS libraries -->
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+	<!-- App files -->
+	<script src="app.js"></script>
+	<!-- CSS -->
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+	<title>Magic mirror</title>
+</head>
+<body>
+	<md-content layout="column" layout-align="start center">
+		<h1 class="md-title">Mirror mirror on the wall...</h1>
+		<md-button class="md-primary md-raised">Wake</md-button>
+		<md-button class="md-primary md-raised">Sleep</md-button>
+		<md-button class="md-primary md-raised">Reboot</md-button>
+	</md-content>
+</body>
+</html>

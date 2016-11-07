@@ -1,0 +1,98 @@
+<!-- status.html -->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<!-- Fonts and icons -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<!-- JS libraries -->
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+	<!-- App files -->
+	<script src="lib/eventSlice.js"></script>
+	<script src="lib/history/api.js"></script>
+	<script src="status-app.js"></script>
+	<!-- CSS -->
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+	<link rel="stylesheet" href="css/status.css">
+	<link rel="stylesheet" href="css/weather-icons.min.css">
+	<title>Current Date and Weather</title>
+</head>
+<body ng-app="app" ng-controller="AppController" layout-padding layout="column">
+	<div flex layout="column" layout-margin id="status-window">
+    	<div flex layout="row" id="date-etc-group">
+    		<div flex="60" layout="column" layout-align="center center" id="date-panel">
+    			<h4 class="md-display-1 status-text">{{date | date:'EEEE, MMMM d yyyy'}}</h4>
+    			<h2 class="md-display-4 status-text">{{date | date:'h:mm a'}}</h2>
+    		</div>
+    		<div flex layout="column" layout-align="center center" id="etc-panel">
+    			<h4 class="md-display-1" style="text-align: center">On this day in {{eventData.year}}</h4>
+    			<span flex="5"></span>
+    			<h5 class="md-headline" style="text-align: center; padding: 20px">{{eventData.text}}</h6>
+    		</div>
+    	</div>
+    	<div flex layout="row" id="weather-group">
+    		<div flex="60" layout="column" layout-align="center stretch" layout-padding id="today-panel">
+    			<h4 class="md-display-1" style="text-align: center">{{city}}, {{state}}</h4>
+    			<h4 class="md-display-1" style="text-align: center">{{currentWeather}}</h4>
+    			<span flex="5"></span>
+    			<div flex="40" layout="row">
+    				<span flex="20"></span>
+    				<div layout="column" layout-align="center center">
+    					<i class="wi {{currentWeatherIcon}} white" id="now-weather"></i>
+    				</div>
+    				<span flex="10"></span>
+    				<div flex="70" layout="column" layout-align="center stretch">
+     					<h2 class="md-display-4" style="text-align: center">{{currentTemp}} C</h2>
+     					<span flex="10"></span>
+    					<div layout="row" layout-align="center center">
+    						<h5 class="md-headline">Hi {{dayHi}}</h5>
+    						<span flex="15"></span>
+    						<h5 class="md-headline">Lo {{dayLo}}</h5>
+    					</div>
+    				</div>
+    				<span flex="10"></span>
+    			</div>
+    			<span flex></span>
+    			<div flex="20" layout="row" layout-align="center center">
+    				<div class="hour-panel" ng-repeat="hour in hourlyWeather" layout="column" layout-align="center center">
+    					<h6 class="md-title" style="white-space: nowrap">{{hour.time | date: 'h a'}}</h6>
+    					<i class="wi {{hour.weatherIcon}} white hourIcon"></i>
+    					<h6 class="md-title">{{hour.temp}}</h6>
+    				</div>
+    			</div>
+    			<div layout="row">
+    			</div>
+    		</div>
+    		<div flex layout="row" id="future-panel">
+    			<div flex layout="column" layout-align="center center" layout-padding id="one-day-panel">
+    				<h5 class="md-headline">{{dateplus | date: 'EEEE'}}</h5>
+    				<h5 class="md-headline">{{dateplus | date: 'MMM. d'}}</h5>
+    				<span flex="10"></span>
+    				<i class="wi {{tomorrowWeatherIcon}} white future"></i>
+    				<span flex="10"></span>
+    				<div layout="row" layout-padding>
+    					<h5 class="md-headline">{{tomorrowHi}}</h5>
+    					<h5 class="md-headline">{{tomorrowLo}}</h5>
+    				</div>
+    			</div>
+    			<div flex layout="column" layout-align="center center" layout-padding id="two-day-panel">
+    				<h5 class="md-headline">{{dateplusplus | date: 'EEEE'}}</h5>
+    				<h5 class="md-headline">{{dateplusplus | date: 'MMM. d'}}</h5>
+    				<span flex="10"></span>
+    				<i class="wi {{overmorrowWeatherIcon}} white future"></i>
+    				<span flex="10"></span>
+    				<div layout="row" layout-padding>
+    					<h5 class="md-headline">{{overmorrowHi}}</h5>
+    					<h5 class="md-headline">{{overmorrowLo}}</h5>
+    				</div>
+    			</div>	
+    		</div>
+    	</div>
+  	</div>
+</body>
+</html>

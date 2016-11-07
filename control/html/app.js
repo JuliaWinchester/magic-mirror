@@ -13,7 +13,7 @@ function AppController($scope, $http) {
 			function errorCallback(response) {
 				return;
 			});
-	}
+	};
 
 	$scope.sleep = function () {
 		return $http.post('/sleep', {key: 1337}).then(
@@ -23,7 +23,7 @@ function AppController($scope, $http) {
 			function errorCallback(response) {
 				return;
 			});
-	}
+	};
 
 	$scope.reboot = function () {
 		return $http.post('/reboot', {key: 1337}).then(
@@ -33,6 +33,6 @@ function AppController($scope, $http) {
 			function errorCallback(response) {
 				return;
 			});
-	}
+	};
 }
 

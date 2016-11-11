@@ -3,7 +3,7 @@ angular.module('app').service('BackgroundImg', BackgroundImg);
 function BackgroundImg() {
 	var service = {
 		imgURL: '',
-		imgDir: 'images/',
+		imgDir: '../images/',
 		imgFiles: {
 			Clear: ['crystal_caves_day.gif','deep_forest_day.gif',
 			'forest_edge_day.gif','jungle_waterfall_afternoon.gif',

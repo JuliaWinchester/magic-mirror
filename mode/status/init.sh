@@ -1,4 +1,4 @@
-pkill -HUP chromium
+tmux kill-session
 
-chromium --noerrdialogs --kiosk ~/mode/status/html/status.html --incognito
+tmux new -d -s status 'chromium-browser --noerrdialogs --kiosk ./html/status.html --incognito'
 

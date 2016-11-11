@@ -16,13 +16,14 @@
 	<script src="lib/eventSlice.js"></script>
 	<script src="lib/history/api.js"></script>
 	<script src="status-app.js"></script>
+    <script src="background-service.js"></script>
 	<!-- CSS -->
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
 	<link rel="stylesheet" href="css/status.css">
 	<link rel="stylesheet" href="css/weather-icons.min.css">
 	<title>Current Date and Weather</title>
 </head>
-<body ng-app="app" ng-controller="AppController" layout-padding layout="column">
+<body ng-app="app" ng-controller="AppController" layout-padding layout="column" style="background-image: url({{backgroundURL}})">
 	<div flex layout="column" layout-margin id="status-window">
     	<div flex layout="row" id="date-etc-group">
     		<div flex="60" layout="column" layout-align="center center" id="date-panel">

@@ -28,6 +28,6 @@ eventSlice = function (events) {
 		return shortList;
 	} else {
 		console.log('No events found for year range, re-sorting for new year range');
-		return $scope.event(events);
+		return eventSlice(events);
 	}
 };

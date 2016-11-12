@@ -8,7 +8,7 @@ function AppController($scope, $http) {
 	$scope.status = function () {
 		return $http.post('/status').then(
 			function successCallback(response) {
-				console.log(response);	
+				console.log(response.data);	
 			},
 			function errorCallback(response) {
 				console.log('error!');
@@ -18,7 +18,7 @@ function AppController($scope, $http) {
 	$scope.reboot = function () {
 		return $http.post('/reboot').then(
 			function successCallback(response) {
-				console.log(response);	
+				console.log(response.data);	
 			},
 			function errorCallback(response) {
 				console.log('error!');

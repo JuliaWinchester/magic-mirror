@@ -11,6 +11,12 @@ app = Flask(__name__)
 def main_page():
 	return app.send_static_file('index.html')
 
+@app.route('/status', methods=['POST'])
+def status():
+	cmd = 'cd ../mode/status && sh init.sh'
+	subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+	return 'Opening status mode'
+
 @app.route('/reboot', methods=['POST'])
 def reboot():
 	def call_reboot():

@@ -14,8 +14,9 @@ def main_page():
 @app.route('/status', methods=['POST'])
 def status():
 	cmd = 'cd ../mode/status && sh init.sh'
-	subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-	return 'Opening status mode'
+	p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+	out,err = p.communicate()
+    	return out
 
 @app.route('/reboot', methods=['POST'])
 def reboot():

@@ -26,12 +26,12 @@ function AppController($scope, $http) {
 	};
 
 	$scope.reboot = function () {
-		return $http.post('/reboot', {key: 1337}).then(
+		return $http.post('/reboot').then(
 			function successCallback(response) {
-				return;	
+				console.log(response);	
 			},
 			function errorCallback(response) {
-				return;
+				console.log('error!');
 			});
 	};
 }

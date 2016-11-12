@@ -1,8 +1,9 @@
 """Control web app for magic mirror modes and functions
 
 """
-from subprocess import call
+import subprocess
 from flask import Flask
+from flask import request
 app = Flask(__name__)
 
 @app.route('/')
@@ -11,8 +12,15 @@ def main_page():
 
 @app.route('/reboot', methods=['POST'])
 def reboot():
-	call('sudo reboot')
-	return 'Rebooting!'
+	if request.remote_addr == "192.168.0.100":
+		cmd = "sudo reboot"
+		p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+		(output, err) = p.communicate()
+		if output == "":
+			output = "missing"
+		return output
+	else:
+		return 'Improper origin'
 
 if __name__ == '__main__':
 	app.run(host= '0.0.0.0')

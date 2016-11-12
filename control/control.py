@@ -20,7 +20,7 @@ def reboot():
 			output = "missing"
 		return output
 	else:
-		return 'Improper origin'
+		return request.remote_addr
 
 if __name__ == '__main__':
 	app.run(host= '0.0.0.0')

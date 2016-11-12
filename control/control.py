@@ -2,6 +2,7 @@
 
 """
 import subprocess
+from threading import Timer
 from flask import Flask
 from flask import request
 app = Flask(__name__)
@@ -12,12 +13,10 @@ def main_page():
 
 @app.route('/reboot', methods=['POST'])
 def reboot():
-	cmd = "sudo reboot"
-	p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-	(output, err) = p.communicate()
-	if output == "":
-		output = "missing"
-	return output
-
+	def call_reboot():
+		subprocess.Popen('sudo reboot', stdout=subprocess.PIPE, shell=True)
+	Timer(10.0, call_reboot).start()
+	return 'Rebooting in 10 seconds, goodbye!'
+	
 if __name__ == '__main__':
 	app.run(host= '0.0.0.0')

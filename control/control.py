@@ -12,15 +12,12 @@ def main_page():
 
 @app.route('/reboot', methods=['POST'])
 def reboot():
-	if request.remote_addr == "192.168.0.100":
-		cmd = "sudo reboot"
-		p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-		(output, err) = p.communicate()
-		if output == "":
-			output = "missing"
-		return output
-	else:
-		return request.remote_addr
+	cmd = "sudo reboot"
+	p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+	(output, err) = p.communicate()
+	if output == "":
+		output = "missing"
+	return output
 
 if __name__ == '__main__':
 	app.run(host= '0.0.0.0')

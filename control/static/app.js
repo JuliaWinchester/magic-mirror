@@ -5,7 +5,12 @@ angular.module('app').controller('AppController', AppController);
 AppController.$inject = ['$scope', '$http'];
 
 function AppController($scope, $http) {
-	$scope.imageEditShow = true;
+	$scope.imageEditShow = false;
+	$scope.conf = {};
+	$scope.albums = [];
+	$scope.defaultAlbum = "";
+	$scope.selectedAlbum = "";
+	$scope.imgShuffleMins = 15;
 
 	$scope.status = function () {
 		return $http.post('/status').then(
@@ -32,6 +37,40 @@ function AppController($scope, $http) {
 			$scope.imageEditShow = true; }
 	};
 
-	
+	$scope.getAlbums = function () {
+		// Get list of albums via python, display them, set currentAlbum, call getImages
+		return $http.get('/album/get-albums').then(
+			function successCallback(response) {
+				$scope.albums = response.data.albums;
+			},
+			function errorCallback(response) {
+				console.log('error!');
+			});
+	};
+
+	$scope.imageShuffle = function () {
+		$scope.conf.album = $scope.selectedAlbum.name;
+		return $http.post('/image-shuffle', {conf: $scope.conf}).then(
+			function successCallback(response) {
+				console.log(response);
+			}, function errorCallback(repsonse) {
+				console.log('error!');
+			});
+	};
+
+	$scope.getControlConf = function () {
+		return $http.get('/get-control-conf').then(
+			function successCallback(response) {
+				console.log(response);
+				$scope.conf = response.data.conf;
+				$scope.defaultAlbum = response.data.conf.album;
+			}, function errorCallback(response) {
+				console.log('error!');
+			});
+	};
+
+	$scope.getControlConf();
+	$scope.getAlbums();
 }
+
 

@@ -1,0 +1,45 @@
+<!-- album.html -->
+<!DOCTYPE html>
+<html ng-app="albumApp" ng-controller="AlbumController">
+<head>
+	<meta charset="UTF-8">
+	<!-- Fonts and icons -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<!-- JS libraries -->
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+  	<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+	<!-- App files -->
+	<script src="static/album/angular-deckgrid.js"></script>
+	<script src="static/album/album.js"></script>
+	<!-- CSS -->
+	<link rel="stylesheet" href="static/album/album.css">
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+
+	<title>Albums</title>
+</head>
+<body ng-app="albumApp" ng-controller="AlbumController" layout="row">
+<md-sidenav md-component-id="left" class="md-sidenav-left" md-is-locked-open="1" md-whiteframe="4" layout="column">
+	<md-toolbar>
+	    Album edit
+	</md-toolbar>
+	<md-list>
+	    <md-list-item ng-repeat="album in albums">
+	        <a ng-click="setCurrentAlbum(album)">{{album.name}}</a>
+	    </md-list-item>
+	</md-list>
+	<span flex></span>
+	<md-button class="md-raised md-primary">Back</md-button>
+</md-sidenav>
+<md-content flex>
+  	<div deckgrid class="deckgrid" source="images">
+    	<div class="a-card">
+        	<img src="" data-ng-src="{{card.src}}">
+    	</div>
+  	</div>
+</md-content>
+</body>
+</html>

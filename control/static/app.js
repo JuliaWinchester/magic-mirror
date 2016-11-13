@@ -5,6 +5,8 @@ angular.module('app').controller('AppController', AppController);
 AppController.$inject = ['$scope', '$http'];
 
 function AppController($scope, $http) {
+	$scope.imageEditShow = true;
+
 	$scope.status = function () {
 		return $http.post('/status').then(
 			function successCallback(response) {
@@ -24,5 +26,12 @@ function AppController($scope, $http) {
 				console.log('error!');
 			});
 	};
+
+	$scope.imageEdit = function () {
+		if ($scope.imageEditShow) { $scope.imageEditShow = false; } else { 
+			$scope.imageEditShow = true; }
+	};
+
+	
 }
 

@@ -13,7 +13,8 @@
   	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
   	<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 	<!-- App files -->
-	<script src="static/app.js"></script>
+	<!-- CHANGE THIS BELOW, REMOVE THE ../ -->
+	<script src="../static/app.js"></script>
 	<!-- CSS -->
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
 	<title>Magic mirror</title>
@@ -22,6 +23,11 @@
 	<md-content layout="column" layout-align="start center">
 		<h1 class="md-title">Mirror mirror on the wall...</h1>
 		<md-button class="md-primary md-raised" ng-click="status()">Status</md-button>
+		<div layout="row">
+			<md-button class="md-primary md-raised" ng-click="imageShuffle()">Image shuffle</md-button>
+			<md-button class="md-primary md-raised" ng-click="imageEdit()">Edit</md-button>
+		</div>
+		<div ng-show="imageEditShow"></div>
 		<md-button class="md-primary md-raised" ng-click="reboot()">Reboot</md-button>
 	</md-content>
 </body>

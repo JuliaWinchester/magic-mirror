@@ -34,7 +34,7 @@
 				<md-input-container>
 					<label>Album</label>
 					<md-select ng-model="selectedAlbum">
-						<md-option ng-repeat="album in albums" ng-value="album" ng-selected="{{album.name == defaultAlbum}}">{{album.name}}</md-option>
+						<md-option ng-repeat="album in albums" ng-value="album" ng-selected="{{album.name == defaultAlbum.name}}">{{album.name}}</md-option>
 					</md-select>
 				</md-input-container>
 				<md-input-container>

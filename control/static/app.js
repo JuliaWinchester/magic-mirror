@@ -10,7 +10,7 @@ function AppController($scope, $http) {
 	$scope.albums = [];
 	$scope.defaultAlbum = "";
 	$scope.selectedAlbum = "";
-	$scope.imgShuffleMins = 15;
+	$scope.imgShuffleMins = 0;
 
 	$scope.status = function () {
 		return $http.post('/status').then(
@@ -49,7 +49,8 @@ function AppController($scope, $http) {
 	};
 
 	$scope.imageShuffle = function () {
-		$scope.conf.album = $scope.selectedAlbum.name;
+		$scope.conf.album = {name: $scope.selectedAlbum.name, path: $scope.selectedAlbum.path};
+		$scope.conf.minBtwnShuffle = $scope.imgShuffleMins;
 		return $http.post('/image-shuffle', {conf: $scope.conf}).then(
 			function successCallback(response) {
 				console.log(response);
@@ -64,6 +65,7 @@ function AppController($scope, $http) {
 				console.log(response);
 				$scope.conf = response.data.conf;
 				$scope.defaultAlbum = response.data.conf.album;
+				$scope.imgShuffleMins = response.data.conf.minBtwnShuffle;
 			}, function errorCallback(response) {
 				console.log('error!');
 			});

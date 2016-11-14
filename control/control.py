@@ -41,8 +41,15 @@ def image_shuffle():
 	conf = request.get_json()
 	with open('static/control.conf','w') as f:
 		json.dump(conf, f)
-	# Need to actually launch image shuffle here
-	return jsonify(conf)
+	path = conf.album.path
+	if validate_album_path(os.path.split(path)[1]):
+		sh_path = os.path.join('../../control/', path)
+		cmd = 'cd ../mode/img-shuffle && sh init.sh ' + str(conf.minBtwnShuffle) + " " + sh_path
+		p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+		out,err = p.communicate()
+		return out
+	else:
+		return 'Invalid directory path'
 
 
 # Images shuffle album edit back-end functions

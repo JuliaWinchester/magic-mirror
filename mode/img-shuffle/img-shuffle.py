@@ -44,7 +44,7 @@ class ShuffleWindow:
 
 	def load_image(self, img_path):
 		img = Image.open(img_path)
-		if img.width/self.sw > img.height/self.sh:
+		if float(img.width)/float(self.sw) > float(img.height)/float(self.sh):
 			new_width = self.sw
 			new_height = float(self.sw)/float(img.width) * float(img.height)
 		else:

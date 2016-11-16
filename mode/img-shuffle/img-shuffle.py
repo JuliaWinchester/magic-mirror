@@ -3,9 +3,14 @@ from os.path import join, isfile
 from os import listdir
 from random import choice
 from threading import Timer 
-from sys import argv
+from sys import argv, version_info
 import time
-import tkinter as tk
+
+# Version-dependent imports
+if version_info.major == 3:
+	import tkinter as tk
+else:
+	import Tkinter as tk
 
 class ShuffleWindow:
 	def __init__(self, t, img_dir):
@@ -18,7 +23,7 @@ class ShuffleWindow:
 
 	def init_GUI(self):
 		self.root = tk.Tk()
-		#self.root.attributes('-fullscreen', True)
+		self.root.attributes('-fullscreen', True)
 		self.sw = self.root.winfo_screenwidth()
 		self.sh = self.root.winfo_screenheight()
 		self.l = tk.Label(self.root, width=self.sw, height=self.sh, bg="black")
@@ -41,9 +46,9 @@ class ShuffleWindow:
 		img = Image.open(img_path)
 		if img.width/self.sw > img.height/self.sh:
 			new_width = self.sw
-			new_height = self.sw/img.width * img.height
+			new_height = float(self.sw)/float(img.width) * float(img.height)
 		else:
-			new_width =  self.sh/img.height * img.width
+			new_width =  float(self.sh)/float(img.height) * float(img.width)
 			new_height = self.sh
 		return img.resize((int(new_width), int(new_height)), Image.ANTIALIAS)
 

@@ -49,23 +49,31 @@ function AppController($scope, $http) {
 	};
 
 	$scope.imageShuffle = function () {
-		$scope.conf.album = {name: $scope.selectedAlbum.name, path: $scope.selectedAlbum.path};
-		$scope.conf.minBtwnShuffle = $scope.imgShuffleMins;
-		return $http.post('/image-shuffle', {conf: $scope.conf}).then(
-			function successCallback(response) {
-				console.log(response);
-			}, function errorCallback(repsonse) {
-				console.log('error!');
-			});
+		if ($scope.selectedAlbum != '' && $scope.imgShuffleMins != 0) {
+			$scope.conf.album = {name: $scope.selectedAlbum.name, path: $scope.selectedAlbum.path};
+			$scope.conf.minBtwnShuffle = $scope.imgShuffleMins;
+			return $http.post('/image-shuffle', {conf: $scope.conf}).then(
+				function successCallback(response) {
+					console.log(response);
+				}, function errorCallback(repsonse) {
+					console.log('error!');
+				});
+		}
 	};
 
 	$scope.getControlConf = function () {
 		return $http.get('/get-control-conf').then(
 			function successCallback(response) {
 				console.log(response);
-				$scope.conf = response.data.conf;
-				$scope.defaultAlbum = response.data.conf.album;
-				$scope.imgShuffleMins = response.data.conf.minBtwnShuffle;
+				if (response.data == 'No conf file found') {
+					$scope.conf = { album: { name: '', path: ''}, minBtwnShuffle: 15};
+					$scope.imgShuffleMins = $scope.conf.minBtwnShuffle;
+				} else if (typeof response.data.conf === 'object') {
+					$scope.conf = response.data.conf;
+					$scope.defaultAlbum = response.data.conf.album;
+					$scope.imgShuffleMins = response.data.conf.minBtwnShuffle;
+				}
+				
 			}, function errorCallback(response) {
 				console.log('error!');
 			});

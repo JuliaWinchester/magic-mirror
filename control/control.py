@@ -32,19 +32,22 @@ def reboot():
 
 @app.route('/get-control-conf')
 def get_control_conf():
-	with open('static/control.conf','r') as f:
-		data = json.load(f)
-	return jsonify(data)
+	if os.path.isfile('static/control.conf'):
+		with open('static/control.conf','r') as f:
+			data = json.load(f)
+		return jsonify(data)
+	else:
+		return 'No conf file found'
 
 @app.route('/image-shuffle', methods=['POST'])
 def image_shuffle():
-	conf = request.get_json()
+	data = request.get_json()
 	with open('static/control.conf','w') as f:
-		json.dump(conf, f)
-	path = conf.album.path
-	if validate_album_path(os.path.split(path)[1]):
+		json.dump(data, f)
+	path = data['conf']['album']['path']
+	if validate_album_path(path):
 		sh_path = os.path.join('../../control/', path)
-		cmd = 'cd ../mode/img-shuffle && sh init.sh ' + str(conf.minBtwnShuffle) + " " + sh_path
+		cmd = 'cd ../mode/img-shuffle && sh init.sh ' + str(data['conf']['minBtwnShuffle']) + " " + sh_path
 		p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 		out,err = p.communicate()
 		return out

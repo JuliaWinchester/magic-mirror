@@ -19,31 +19,37 @@
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
 	<title>Magic mirror</title>
 </head>
-<body>
-	<md-content layout="column" layout-align="start center">
-		<h1 class="md-title">Mirror mirror on the wall...</h1>
-		<md-button class="md-primary md-raised" ng-click="status()">Status</md-button>
-		<div layout="row">
-			<md-button class="md-primary md-raised" ng-click="imageShuffle()">Image shuffle</md-button>
-			<md-button class="md-icon-button" ng-click="imageEdit()">
-				<md-icon md-font-library="material-icons"> edit </md-icon>
-			</md-button>
+<body flex layout="column">
+	<md-content flex layout="column">
+		<h1 style="text-align: center" class="md-title">Mirror mirror on the wall...</h1>
+		<div flex layout="row">
+			<span flex="40"></span>
+			<div flex layout="column">
+				<md-button class="md-primary md-raised" ng-click="imageShuffle()">Picture Frame</md-button>
+				<md-card ng-show="imageEditShow" layout="column">
+					<md-card-content layout="column">
+						<md-input-container>
+							<label>Album</label>
+							<md-select ng-model="selectedAlbum">
+								<md-option ng-repeat="album in albums" ng-value="album" ng-selected="{{album.name == defaultAlbum.name}}">{{album.name}}</md-option>
+							</md-select>
+						</md-input-container>
+						<md-input-container>
+							<input ng-model="imgShuffleMins" placeholder="Shuffle (mins)">
+						</md-input-container>
+						<md-button href="/album" class="md-raised md-primary">Edit albums</md-button>
+					</md-card-content>
+				</md-card>
+				<md-button class="md-primary md-raised" ng-click="status()">Status Screen</md-button>
+				<md-button class="md-primary md-raised" ng-click="reboot()">Die Monster Die</md-button>
+			</div>
+			<div layout="column">
+				<md-button class="md-icon-button" ng-click="imageEdit()">
+						<md-icon md-font-library="material-icons"> edit </md-icon>
+				</md-button>
+			</div>
+			<span flex="35"></span>
 		</div>
-		<md-card ng-show="imageEditShow" layout="column">
-			<md-card-content layout="column">
-				<md-input-container>
-					<label>Album</label>
-					<md-select ng-model="selectedAlbum">
-						<md-option ng-repeat="album in albums" ng-value="album" ng-selected="{{album.name == defaultAlbum.name}}">{{album.name}}</md-option>
-					</md-select>
-				</md-input-container>
-				<md-input-container>
-					<input ng-model="imgShuffleMins" placeholder="Minutes between shuffles">
-				</md-input-container>
-				<md-button href="/album" class="md-raised md-primary">Edit albums</md-button>
-			</md-card-content>
-		</md-card>
-		<md-button class="md-primary md-raised" ng-click="reboot()">Reboot</md-button>
 	</md-content>
 </body>
 </html>

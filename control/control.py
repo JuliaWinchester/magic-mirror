@@ -80,7 +80,7 @@ def album_page():
 @app.route('/album/get-albums')
 def get_albums():
 	base_dir = 'static/album/assets/img_albums'
-	dir_names = os.listdir(base_dir)
+	dir_names = [d for d in os.listdir(base_dir) if os.path.isdir(os.path.join(base_dir, d))]
 	albums = []
 	for dir_name in dir_names:
 		with open(os.path.join(base_dir, dir_name, dir_name+'.conf')) as f:

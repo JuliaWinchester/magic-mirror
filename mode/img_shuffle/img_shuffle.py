@@ -110,7 +110,7 @@ class ShuffleWindow:
 
     def init_GUI(self):
         self.root = tk.Tk()
-        #self.root.attributes('-fullscreen', True)
+        self.root.attributes('-fullscreen', True)
         self.l = BetterLabel(self.root)
         self.l.pack()
         Timer(1.0, self.image_loop).start()

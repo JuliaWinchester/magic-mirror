@@ -47,7 +47,7 @@ def image_shuffle():
 	path = data['conf']['album']['path']
 	if validate_album_path(path):
 		sh_path = os.path.join('../../control/', path)
-		cmd = 'cd ../mode/img-shuffle && sh init.sh ' + str(data['conf']['minBtwnShuffle']) + " " + sh_path
+		cmd = 'cd ../mode/img_shuffle && sh init.sh ' + str(data['conf']['minBtwnShuffle']) + " " + sh_path
 		p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 		out,err = p.communicate()
 		return out

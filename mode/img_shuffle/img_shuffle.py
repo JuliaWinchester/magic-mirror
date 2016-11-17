@@ -17,7 +17,6 @@ class BetterLabel(tk.Label):
         self.w = root.winfo_screenwidth()
         self.h = root.winfo_screenheight()
         self.anim_playing = 0
-        self.new_image_waiting = 0
         self.queued_image = None
 
         tk.Label.__init__(self, root, width=self.w, height=self.h, bg=bg)
@@ -33,28 +32,26 @@ class BetterLabel(tk.Label):
             new_height = self.h
         return pil_img.resize((int(new_width), int(new_height)), Image.ANTIALIAS)
 
-    def set_image(self, img):
-        if self.anim_playing == 1:
-            if self.queued_image == None:
-                print("can't play new image yet, putting it in queue")
-                self.new_image_waiting = 1
-                self.queued_image = img
-            return
-        else:
-            self.new_image_waiting = 0
-            self.queued_image = None
-            if img.lower()[-3:] == 'gif':
-                self.set_anim_image(img)
-            else:
-                self.set_static_image(img)
+    def display_image(self, img):
+        if self.queued_image == None:
+            self.set_image(img)
+            if self.anim_playing == 0:
+                self.play_queued_image()
 
-    def set_static_image(self, img):
+    def set_image(self, img):
+        if img.lower()[-3:] == 'gif':
+            self.set_anim(img)
+        else:
+            self.set_static(img)
+
+    def set_static(self, img):
         pil_img = self.resize_image(Image.open(img))
         tk_img = ImageTk.PhotoImage(pil_img)
-        self.configure(image = tk_img)
-        self.image = tk_img
+        self.queued_image = tk_img
 
-    def construct_anim_frames(self, pil_img):
+    def set_anim(self, img):
+        pil_img = Image.open(img)
+
         seq = []
         try:
             while 1:
@@ -64,45 +61,46 @@ class BetterLabel(tk.Label):
             pass
 
         first = self.resize_image(seq[0].convert('RGBA'))
-        self.frames = [ImageTk.PhotoImage(first)]
+        frames = [ImageTk.PhotoImage(first)]
 
         temp = seq[0]
         for image in seq[1:]:
             temp.paste(image)
             frame = self.resize_image(temp.convert('RGBA'))
-            self.frames.append(ImageTk.PhotoImage(frame))
-        print('frame construction done')
-
-    def set_anim_image(self, img):
-        img = Image.open(img)
-
-        self.construct_anim_frames(img)
+            frames.append(ImageTk.PhotoImage(frame))
         
         try:
-            self.delay = img.info['duration']
-            if self.delay == 0:
-                self.delay = 100
+            delay = pil_img.info['duration']
+            if delay == 0:
+                delay = 100
         except KeyError:
-            print('defaulting to standard delay amount')
-            self.delay = 100
+            delay = 100
 
-        self.index = 0
-        self.cancel = self.after(self.delay, self.anim_play)
+        self.queued_image = {'frames': frames, 'delay': delay}
 
-    def anim_play(self):
+    def play_queued_image(self):
+        img = self.queued_image
+        self.queued_image = None
+        if type(img) == dict:
+            self.anim_index = 0
+            self.play_anim(img)
+        else:
+            self.play_static(img)
+
+    def play_anim(self, img):
         self.anim_playing = 1
-        print(self.index)
-        self.configure(image = self.frames[self.index])
-        self.index += 1
-        if self.index == len(self.frames):
-            self.index = 0
-            print(self.index)
-            if self.new_image_waiting == 1:
+        self.configure(image = img['frames'][self.anim_index])
+        self.anim_index += 1
+        if self.anim_index == len(img['frames']):
+            self.anim_index = 0
+            if self.queued_image != None:
                 self.anim_playing = 0
-                print('gif animation ended, playing new image:')
-                print(self.queued_image)
-                return self.set_image(self.queued_image)
-        self.cancel = self.after(self.delay, self.anim_play)
+                return self.play_queued_image()
+        self.cancel = self.after(img['delay'], self.play_anim, img)
+
+    def play_static(self, img):
+        self.configure(image = img)
+        self.image = img
 
 class ShuffleWindow:
     def __init__(self, t, img_dir):
@@ -119,10 +117,8 @@ class ShuffleWindow:
         self.root.mainloop()
     
     def image_loop(self):
-        print('new loop, sending new image of path:')
         img_path = choice(self.imgs)
-        print(img_path)
-        self.l.set_image(img_path)
+        self.l.display_image(img_path)
         Timer(self.t*60, self.image_loop).start()
 
 if __name__ == '__main__':

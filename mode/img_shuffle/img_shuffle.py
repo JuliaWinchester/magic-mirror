@@ -39,19 +39,25 @@ class BetterLabel(tk.Label):
                 self.play_queued_image()
 
     def set_image(self, img):
+        pil_img = Image.open(img)
+        
+        try:
+            pil_img.load()
+        except IOError:
+            print("temporary error, IOError loading image " + str(img) + ". moving on")
+            return
+        
         if img.lower()[-3:] == 'gif':
-            self.set_anim(img)
+            self.set_anim(pil_img)
         else:
-            self.set_static(img)
+            self.set_static(pil_img)
 
-    def set_static(self, img):
-        pil_img = self.resize_image(Image.open(img))
+    def set_static(self, pil_img):
+        pil_img = self.resize_image(pil_img)
         tk_img = ImageTk.PhotoImage(pil_img)
         self.queued_image = tk_img
 
-    def set_anim(self, img):
-        pil_img = Image.open(img)
-
+    def set_anim(self, pil_img):
         seq = []
         try:
             while 1:

@@ -1,4 +1,4 @@
-var app = angular.module('app', ['ngMaterial']);
+var app = angular.module('app', ['ngMaterial', 'LocalStorageModule']);
 
 angular.module('app').provider('zipcode', [function () {
 	var zipcode = null;
@@ -18,9 +18,9 @@ angular.module('app').config(["zipcodeProvider", function (zipcodeProvider) {
 
 angular.module('app').controller('AppController', AppController);
 
-AppController.$inject = ['$scope', '$timeout', 'zipcode', '$http', 'BackgroundImg', '$q'];
+AppController.$inject = ['$scope', '$timeout', 'zipcode', '$http', 'BackgroundImg', '$q', 'localStorageService'];
 
-function AppController($scope, $timeout, zipcode, $http, BackgroundImg, $q) {
+function AppController($scope, $timeout, zipcode, $http, BackgroundImg, $q, localStorageService) {
 	$scope.tickLoop = function () {
 		$scope.date = new Date();
 		$scope.dateplus = new Date($scope.date.getTime() + 86400000);
@@ -84,8 +84,7 @@ function AppController($scope, $timeout, zipcode, $http, BackgroundImg, $q) {
 
 	$scope.initWeather = function () {
 		$scope.getWeather().then(function successCallback() {
-			$scope.backgroundLoop();
-			console.log(BackgroundImg.imgURL);
+			$scope.initBackground();
 		}, function errorCallback() {
 			console.log('error!');
 			$timeout($scope.initWeather, 10000);
@@ -105,8 +104,24 @@ function AppController($scope, $timeout, zipcode, $http, BackgroundImg, $q) {
 		$timeout($scope.dataLoop, 900000);
 	};
 
+	$scope.initBackground = function () {
+		if (localStorageService.get('backgroundImgURL') !== null) {
+			BackgroundImg.imgURL = localStorageService.get('backgroundImgURL');
+			$scope.backgroundURL = BackgroundImg.imgURL;
+			var msUntil5 = new Date($scope.date.getFullYear(), $scope.date.getMonth(), $scope.date.getDate(), 5, 0, 0, 0) - $scope.date;
+			if (msUntil5 < 0) {
+				msUntil5 += 86400000;
+			}
+			$timeout($scope.backgroundLoop, msUntil5);
+		} else {
+			$scope.backgroundLoop();
+		}
+	};
+
 	$scope.backgroundLoop = function () {
 		$scope.backgroundURL = BackgroundImg.setImg($scope.dayWeatherIcon);
+		console.log($scope.backgroundURL);
+		localStorageService.set('backgroundImgURL', $scope.backgroundURL);
 		var msUntil5 = new Date($scope.date.getFullYear(), $scope.date.getMonth(), $scope.date.getDate(), 5, 0, 0, 0) - $scope.date;
 		if (msUntil5 < 0) {
 			msUntil5 += 86400000;

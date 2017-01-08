@@ -29,13 +29,12 @@ for f in camera.capture_continuous(raw_capture, format = 'bgr', use_video_port=T
 	cv2.accumulateWeighted(gray, avg, 0.5)
 	frame_delta = cv2.absdiff(gray, cv2.convertScaleAbs(avg))
 	thresh = cv2.threshold(frame_delta, 5, 255, cv2.THRESH_BINARY)
-	print cv2.countNonZero(thresh[1])
 	cv2.imshow('thresh', thresh[1])
-	key = cv2.waitKey(1) & 0xFF
-
-	if key == ord('q'):
-		break
 	raw_capture.truncate(0)
+	if cv2.countNonZero(thresh[1]) > 10000:
+		# save the original frame image and sleep for 60 seconds
+		cv2.imwrite(datetime.datetime.now().strftime('%Y-%m-%d_H%H-M%M-S%S')+'.png', frame)
+		time.sleep(60)
 
 camera.release()
 cv2.destroyAllWindows()

@@ -1,6 +1,7 @@
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
+import datetime
 import threading
 import time
 
@@ -39,7 +40,7 @@ for f in camera.capture_continuous(raw_capture, format = 'bgr', use_video_port=T
 	thresh = cv2.threshold(frame_delta, 5, 255, cv2.THRESH_BINARY)
 	cv2.imshow('thresh', thresh[1])
 	print(cv2.countNonZero(thresh[1]))
-	raw_capture.truncate(0)
+	
 	if cv2.countNonZero(thresh[1]) > 10000 && Polling.on:
 		# save the original frame image, turn off polling, turn it back on in 60 secs
 		print('Saving image, not polling camera for 60 secs.')
@@ -47,6 +48,11 @@ for f in camera.capture_continuous(raw_capture, format = 'bgr', use_video_port=T
 		Polling.turn_off()
 		t = threading.Timer(60.0, Polling.turn_on)
 		t.start()
+	key = cv2.waitKey(1) & 0xFF
+	if key == ord("q"):
+		break
+		
+	raw_capture.truncate(0)
 
 camera.release()
 cv2.destroyAllWindows()

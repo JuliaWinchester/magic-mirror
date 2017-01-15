@@ -59,7 +59,7 @@ class Panoptikun:
 		self.app_launched = 1
 		self.time_window = 5 * 60
 
-	def kill_app(self)
+	def kill_app(self):
 		cmd = 'tmux kill-session -t mode && aplay ./sounds/Turret_turret_retire_2.wav'
 		p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 		out,err = p.communicate()

@@ -19,6 +19,7 @@ class Polling:
 	def turn_off(self):
 		self.on = 0
 
+poll = Polling()
 # capture frames from camera, initializing background model if needed
 avg = None
 for f in camera.capture_continuous(raw_capture, format = 'bgr', use_video_port=True):
@@ -41,12 +42,12 @@ for f in camera.capture_continuous(raw_capture, format = 'bgr', use_video_port=T
 	cv2.imshow('thresh', thresh[1])
 	print(cv2.countNonZero(thresh[1]))
 	
-	if cv2.countNonZero(thresh[1]) > 10000 && Polling.on:
+	if cv2.countNonZero(thresh[1]) > 10000 and poll.on:
 		# save the original frame image, turn off polling, turn it back on in 60 secs
 		print('Saving image, not polling camera for 60 secs.')
 		cv2.imwrite(datetime.datetime.now().strftime('%Y-%m-%d_H%H-M%M-S%S')+'.png', frame)
-		Polling.turn_off()
-		t = threading.Timer(60.0, Polling.turn_on)
+		poll.turn_off()
+		t = threading.Timer(60.0, poll.turn_on)
 		t.start()
 	key = cv2.waitKey(1) & 0xFF
 	if key == ord("q"):

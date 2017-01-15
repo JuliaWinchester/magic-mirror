@@ -72,7 +72,7 @@ class Panoptikun:
 		if self.frame_avg is None:
 			self.frame_avg = gray.copy().astype("float")
 			raw_capture.truncate(0)
-			continue
+			return 0
 
 		# accumulate weighted average between current frame and previous frames,
 		# then compute difference between current frame and running average

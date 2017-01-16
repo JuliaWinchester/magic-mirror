@@ -14,6 +14,7 @@ class Panoptikun:
 		self.time_window = time_window
 		self.frame_avg = None
 		self.start_time = None
+		self.cons_mov_frames = 0
 		self.wake()
 		
 	def init_camera(self):
@@ -62,7 +63,7 @@ class Panoptikun:
 		self.time_window = 5 * 60
 
 	def kill_app(self):
-		disp('killing app')
+		print('killing app')
 		cmd = 'tmux kill-session -t mode; aplay ./sounds/Turret_turret_retire_2.wav'
 		p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 		out,err = p.communicate()
@@ -89,14 +90,21 @@ class Panoptikun:
 			p = self.moving_pixels(f.array)
 			print(p)
 			if p > 10000 and self.polling:
-				if self.app_launched:
-					extra_sleep = self.time_window - (datetime.datetime.now() - self.start_time).total_seconds()
-					self.sleep(15 * 60 + extra_sleep)
-				else:
-					self.launch_app()
-					self.sleep(15 * 60)
+				self.cons_mov_frames += 1
+				if self.cons_mov_frames == 3:
+					if self.app_launched:
+						print('motion detected while app is up, sleeping again')
+						extra_sleep = self.time_window - (datetime.datetime.now() - self.start_time).total_seconds()
+						self.sleep(15 * 60 + extra_sleep)
+					else:
+						print('motion detected with no app, launching app')
+						self.launch_app()
+						self.sleep(15 * 60)
+			else:
+				self.cons_mov_frames = 0
 
 			if self.time_window and (datetime.datetime.now() - self.start_time).total_seconds() >= (5 * 60):
+				print('no motion in time window, killing app')
 				self.kill_app()
 				
 			self.raw_capture.truncate(0)

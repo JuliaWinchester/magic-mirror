@@ -48,7 +48,7 @@ class Panoptikun:
 		print('launching app')
 		cur_time = datetime.datetime.now()
 		def sys_launch(app):
-			cmd = 'tmux kill-session -t mode; cd ../mode/' + app + '; sh init.sh; cd ../../panoptikun; aplay ./sounds/Turret_turret_autosearch_1.wav'
+			cmd = 'tmux kill-session -t mode; cd ../mode/' + app + '; sh init.sh; cd ../../panoptikun'
 			p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 			out,err = p.communicate()
 			return out
@@ -64,7 +64,7 @@ class Panoptikun:
 
 	def kill_app(self):
 		print('killing app')
-		cmd = 'tmux kill-session -t mode; aplay ./sounds/Turret_turret_retire_2.wav'
+		cmd = 'tmux kill-session -t mode'
 		p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 		out,err = p.communicate()
 		self.app_launched = 0

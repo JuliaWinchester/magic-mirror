@@ -48,7 +48,7 @@ class Panoptikun:
 		print('launching app')
 		cur_time = datetime.datetime.now()
 		def sys_launch(app):
-			cmd = 'tmux kill-session -t mode; cd ../mode/' + app + '; sh init.sh; export DISPLAY=:0.0; /opt/vc/bin/tvservice -p; xset dpms force on'
+			cmd = 'tmux kill-session -t mode; cd ../mode/' + app + '; sh init.sh; export DISPLAY=:0.0; /opt/vc/bin/tvservice -p; xset dpms force on; xset -dpms'
 			p = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
 			out,err = p.communicate()
 			return out

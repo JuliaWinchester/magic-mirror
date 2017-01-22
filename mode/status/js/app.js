@@ -104,15 +104,20 @@ function AppController($scope, $timeout, zipcode, $http, BackgroundImg, $q, loca
 		$timeout($scope.dataLoop, 900000);
 	};
 
+	$scope.msUntilBGChange = function (bgCT) {
+		return bgCT - $scope.date;
+	};
+
 	$scope.initBackground = function () {
-		if (localStorageService.get('backgroundImgURL') !== null) {
-			BackgroundImg.imgURL = localStorageService.get('backgroundImgURL');
-			$scope.backgroundURL = BackgroundImg.imgURL;
-			var msUntil5 = new Date($scope.date.getFullYear(), $scope.date.getMonth(), $scope.date.getDate(), 5, 0, 0, 0) - $scope.date;
-			if (msUntil5 < 0) {
-				msUntil5 += 86400000;
+		if (localStorageService.get('backgroundImgURL') !== null && localStorageService.get('bgChangeTime') !== null) {
+			var bgChangeTime = new Date(localStorageService.get('bgChangeTime'));
+			if (bgChangeTime <= $scope.date) {
+				$scope.backgroundLoop();
+			} else {
+				BackgroundImg.imgURL = localStorageService.get('backgroundImgURL');
+				$scope.backgroundURL = BackgroundImg.imgURL;
+				$timeout($scope.backgroundLoop, $scope.msUntilBGChange(bgChangeTime));
 			}
-			$timeout($scope.backgroundLoop, msUntil5);
 		} else {
 			$scope.backgroundLoop();
 		}
@@ -122,11 +127,12 @@ function AppController($scope, $timeout, zipcode, $http, BackgroundImg, $q, loca
 		$scope.backgroundURL = BackgroundImg.setImg($scope.dayWeatherIcon);
 		console.log($scope.backgroundURL);
 		localStorageService.set('backgroundImgURL', $scope.backgroundURL);
-		var msUntil5 = new Date($scope.date.getFullYear(), $scope.date.getMonth(), $scope.date.getDate(), 5, 0, 0, 0) - $scope.date;
-		if (msUntil5 < 0) {
-			msUntil5 += 86400000;
+		var bgChangeTime = new Date($scope.date.getFullYear(), $scope.date.getMonth(), $scope.date.getDate(), 5, 0, 0, 0);
+		if (bgChangeTime < $scope.date) { 
+			bgChangeTime = new Date(bgChangeTime.getTime() + 86400000); 
 		}
-		$timeout($scope.backgroundLoop, msUntil5);
+		localStorageService.set('bgChangeTime', bgChangeTime.getTime());
+		$timeout($scope.backgroundLoop, $scope.msUntilBGChange(bgChangeTime));
 	};
 
 	$scope.date = new Date();

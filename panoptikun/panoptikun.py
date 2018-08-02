@@ -68,8 +68,10 @@ class Panoptikun:
 			return out
 
 		rand = 0
-		if (cur_time.hour >= 5 and cur_time.hour <= 11) or 
-		   (cur_time.hour >= 16 and cur_time.hour <= 19):
+		if (
+		     (cur_time.hour >= 5 and cur_time.hour <= 11) or 
+		     (cur_time.hour >= 16 and cur_time.hour <= 19)
+		   ):
 			app = 'status'
 		else: 
 			app_conf = json.load(open('conf.json', 'r'))
@@ -86,7 +88,7 @@ class Panoptikun:
 		if rand:
 			app = 'img_shuffle'
 			json.dump({'app_last': '', 'app_last_time': ''}, open('conf.json', 'w'))
-			
+
 		sys_launch(app)
 		self.app_launched = 1
 		self.time_window = 5 * 60

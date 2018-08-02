@@ -2,6 +2,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
 import datetime
+import gc
 import json
 import subprocess
 import threading
@@ -16,6 +17,7 @@ class Panoptikun:
 		self.start_time = None
 		self.cons_mov_frames = 0
 		self.wake()
+		self.capture_loop()
 		
 	def init_camera(self):
 		self.camera = PiCamera(resolution = (640,480), framerate = 16)
@@ -27,13 +29,25 @@ class Panoptikun:
 		time.sleep(secs)
 		self.wake()
 
+	def sleep_until(self, hour):
+		self.kill_camera()
+		gc.collect()
+		cur_time = datetime.datetime.now()
+		wake_time = cur_time.replace(hour=5)
+		delta_time = wake_time - cur_time
+		if delta_time.total_seconds() >= 0:
+			time.sleep(delta_time.total_seconds())
+			self.wake()
+		else:
+			time.sleep(86400.0 + delta_time.total_seconds())
+			self.wake()
+
 	def wake(self):
 		self.set_polling_off()
 		self.init_camera()
 		if self.time_window is not None:
 			self.start_time = datetime.datetime.now()
-		threading.Timer(10.0, self.set_polling_on).start()
-		self.capture_loop()		
+		threading.Timer(10.0, self.set_polling_on).start()		
 
 	def kill_camera(self):
 		self.camera.close()
@@ -53,12 +67,27 @@ class Panoptikun:
 			out,err = p.communicate()
 			return out
 
-		if cur_time.hour >= 5 and cur_time.hour <= 11:
+		rand = 0
+		if (cur_time.hour >= 5 and cur_time.hour <= 11) or 
+		   (cur_time.hour >= 16 and cur_time.hour <= 19):
 			app = 'status'
 		else: 
-			app = json.load(open('conf.json', 'r'))['app_last']
+			app_conf = json.load(open('conf.json', 'r'))
+			if app_conf['app_last'] and app_conf['app_last_time']:
+				cur_time = datetime.datetime.now()
+				start_time = datetime.datetime.strptime(app_conf['app_last_time'], "%Y-%m-%dT%H:%M:%S.%f")
+				if (cur_time - start_time).total_seconds() < 10800:
+					app = app_conf['app_last']
+				else:
+					rand = 1
+			else: 
+				rand = 1
+
+		if rand:
+			app = 'img_shuffle'
+			json.dump({'app_last': '', 'app_last_time': ''}, open('conf.json', 'w'))
+			
 		sys_launch(app)
-		json.dump({'app_last': app}, open('conf.json', 'w'))
 		self.app_launched = 1
 		self.time_window = 5 * 60
 
@@ -87,6 +116,11 @@ class Panoptikun:
 
 	def capture_loop(self):
 		for f in self.camera.capture_continuous(self.raw_capture, format = 'bgr', use_video_port=True):
+			cur_time = datetime.datetime.now()
+			if cur_time.hour >= 1 and cur_time.hour <= 5:
+				print('snoozing, goodnight')
+				self.sleep_until(5)
+
 			p = self.moving_pixels(f.array)
 			print(p)
 			if p > 10000 and self.polling:

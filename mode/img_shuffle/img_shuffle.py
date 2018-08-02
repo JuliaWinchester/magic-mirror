@@ -1,5 +1,5 @@
 from PIL import Image, ImageTk
-from os.path import join, isfile
+from os.path import join, isdir, isfile
 from os import listdir
 from random import choice
 from threading import Timer 
@@ -128,4 +128,13 @@ class ShuffleWindow:
         Timer(self.t*60, self.image_loop).start()
 
 if __name__ == '__main__':
-    shuffle_window = ShuffleWindow(float(argv[1]), argv[2])
+    if len(argv) == 3:
+        t = float(argv[1])
+        img_dir = argv[2]
+    else
+        t = 3.0
+        dir_root = '../../control/static/album/assets/img_albums/'
+        img_albums = [join(dir_root, sub_dir) for sub_dir in listdir(dir_root) 
+            if isdir(join(dir_root, sub_dir))]
+        img_dir = random.choice(img_albums)
+    shuffle_window = ShuffleWindow(t, img_dir)
